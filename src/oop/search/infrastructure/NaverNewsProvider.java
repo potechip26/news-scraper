@@ -12,7 +12,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NaverNewsProvider extends AbstractHttpScraper {
+//public class NaverNewsProvider extends AbstractHttpScraper {
+public class NaverNewsProvider extends AbstractHttpClient implements NewsProvider {
 	//    protected AbstractHttpScraper(String endpoint) {
 //        this.endpoint = endpoint;
 //    }
@@ -63,7 +64,7 @@ public class NaverNewsProvider extends AbstractHttpScraper {
 //            System.out.println("items = " + items);
 			String[] itemArr = items.split("},");
 			for (String item : itemArr) {
-				System.out.println("item = " + item);
+//                System.out.println("item = " + item);
 //                String title = item
 //                        .split("\"title\":\"")[1] // 0 <-> 1 -> ["title":"]
 //                        .split("\",")[0]; // ",

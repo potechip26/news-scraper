@@ -1,0 +1,60 @@
+name: 네이버 뉴스 스크래퍼
+
+on:
+  schedule:
+    - cron: '42 * * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: news-scraper
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  create-news-issue:
+    name: 뉴스 이슈 생성
+    runs-on: ubuntu-latest
+    #    timeout-minutes: 10 # 너무 오래 기다릴 시 취소
+    steps:
+      - name: 저장소 체크아웃
+        uses: actions/checkout@v7
+
+      - name: JDK 17 설정
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: 환경 점검
+        run: |
+          echo "환경 점검 시작..."
+          java -version
+          echo "NEWS_QUERY: ${NEWS_QUERY}"
+          echo "NEWS_DISPLAY: ${NEWS_DISPLAY}"
+          echo "환경 점검 완료"
+        env:
+          NEWS_QUERY: ${{ vars.NEWS_QUERY }}
+          NEWS_DISPLAY: ${{ vars.NEWS_DISPLAY }}
+
+      - name: 소스 컴파일
+        run: |
+          echo "소스 컴파일 시작..."
+          javac -d out $(find src/oop -name '*.java')
+          class_count=$(find out -name '*.class' | wc -l | tr -d ' ')
+          echo "컴파일 완료: 클래스 ${class_count}개"
+
+      - name: 뉴스 이슈 생성
+        run: |
+          echo "뉴스 수집 및 이슈 생성 시작..."
+          java -cp out oop.scraper.presentation.GitHubNewsApp
+          echo "이슈 생성 작업 종료"
+        env:
+          NAVER_CLIENT_ID: ${{ secrets.NAVER_CLIENT_ID }}
+          NAVER_CLIENT_SECRET: ${{ secrets.NAVER_CLIENT_SECRET }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # 자동으로 들어가는 값 1
+          GITHUB_REPOSITORY: ${{ github.repository }} # 자동으로 들어가는 값 2
+          NEWS_QUERY: ${{ vars.NEWS_QUERY }}
+          NEWS_DISPLAY: ${{ vars.NEWS_DISPLAY }}
