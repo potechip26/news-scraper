@@ -37,9 +37,9 @@ jobs:
           echo "NEWS_DISPLAY: ${NEWS_DISPLAY}"
           echo "NEWS_CATEGORY: ${NEWS_CATEGORY}"
         env:
-          NEWS_QUERY: ${{ vars.NEWS_QUERY }}
-          NEWS_DISPLAY: ${{ vars.NEWS_DISPLAY }}
-          NEWS_CATEGORY: ${{ vars.NEWS_CATEGORY }}
+          NEWS_QUERY: ${{ vars.NEWS_QUERY || '오늘의 뉴스' }}
+          NEWS_DISPLAY: ${{ vars.NEWS_DISPLAY || '10' }}
+          NEWS_CATEGORY: ${{ vars.NEWS_CATEGORY || 'SIM' }}
 
       - name: Compile sources
         run: |
@@ -59,6 +59,6 @@ jobs:
           NAVER_CLIENT_SECRET: ${{ secrets.NAVER_CLIENT_SECRET }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}
-          NEWS_QUERY: ${{ vars.NEWS_QUERY }}
-          NEWS_DISPLAY: ${{ vars.NEWS_DISPLAY }}
-          NEWS_CATEGORY: ${{ vars.NEWS_CATEGORY }}
+          NEWS_QUERY: ${{ vars.NEWS_QUERY || '오늘의 뉴스' }}
+          NEWS_DISPLAY: ${{ vars.NEWS_DISPLAY || '10' }}
+          NEWS_CATEGORY: ${{ vars.NEWS_CATEGORY || 'SIM' }}
